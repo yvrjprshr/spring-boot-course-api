@@ -2,47 +2,53 @@ package com.springrest.springrest.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springrest.springrest.dao.CourseDao;
 import com.springrest.springrest.entities.Course;
 
 @Service
 public class CourseServiceImplementation implements CourseService{
 	
-	List<Course> list;
+//	List<Course> list;
 	
-	public CourseServiceImplementation() {
-		list = new ArrayList<>();
-		list.add(new Course(14, "Java Course", "It is a full advanced java course @756 INR"));
-		list.add(new Course(15, "Javascript Course", "It is a full advanced java course @756 INR"));
-		list.add(new Course(16, "Python Course", "It is a full advanced java course @756 INR"));
-		list.add(new Course(17, "Spring Boot Course", "It is a full advanced java course @756 INR"));
-	}
+	@Autowired
+	private CourseDao courseDao;
+	
+	public CourseServiceImplementation() {}
 	
 	// Get All courses
 	@Override
 	public List<Course> getCourses() {
-		return list;
+		return courseDao.findAll();
 	}
 	
 	// Get one course by id
 	@Override
 	public Course getCourse(long courseId) {
-		Course c = null;
-		for(Course course: list) {
-			if(course.getId() == courseId) {
-				c = course;
-				break;
-			}
-		}
-		return c;
+		return courseDao.getOne(courseId);
 	}
 	
 	// add course
 	@Override
 	public Course addCourse(Course course) {
-		list.add(course);
+		courseDao.save(course);
 		return course;
+	}
+	
+	// update course
+	@Override
+	public Course updateCourse(Course course) {
+		courseDao.save(course);
+		return course;
+	}
+	
+	// delete course by id
+	public void deleteCourse(long courseId) {
+		Course entity = courseDao.getOne(courseId);
+		courseDao.delete(entity);
 	}
 }
